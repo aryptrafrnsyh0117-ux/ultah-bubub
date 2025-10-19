@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selamat Ulang Tahun 🎂</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; padding: 0; }
+  body {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    overflow: hidden;
+    background: linear-gradient(45deg,#ff9a9e,#fad0c4,#fbc2eb,#a6c1ee);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+  }
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  canvas#fireworks {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: 20px;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0,0,0,0.3);
+  }
+
+  h1 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    margin: 8px 0 12px;
+    color: #fff;
+    text-shadow: 0 0 20px #ff69b4;
+  }
+
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0 auto;
+    max-width: 760px;
+  }
+
+  /* Balon */
+  .balloon { position:absolute; bottom:-150px; width:80px; height:100px; border-radius:50%; opacity:0.9; animation: float 10s linear infinite; }
+  @keyframes float { 0%{transform:translateY(0);} 100%{transform:translateY(-120vh);} }
+  .balloon:before { content:""; position:absolute; width:2px; height:50px; background:white; left:50%; top:100%; transform:translateX(-50%); }
+  .b1{left:10%; background:#ff4b1f; animation-delay:0s;}
+  .b2{left:30%; background:#ff9068; animation-delay:2s;}
+  .b3{left:50%; background:#ffb347; animation-delay:4s;}
+  .b4{left:70%; background:#8ec5fc; animation-delay:6s;}
+  .b5{left:90%; background:#f093fb; animation-delay:8s;}
+
+  /* Kue */
+  .cake { position: relative; width:140px; height:90px; margin:30px auto 0; animation: bounce 3s infinite ease-in-out; }
+  @keyframes bounce { 0%,100%{transform: translateY(0);} 50%{transform: translateY(-8px);} }
+  .cake .base { width:100%; height:70%; background: linear-gradient(#ffd1dc,#ffb6c1); border-radius:12px 12px 8px 8px; box-shadow:0 6px 0 #ff8fb2 inset; }
+  .cake .icing { position:absolute; top:-10px; left:8%; width:84%; height:24px; background:#fff; border-radius:12px; }
+  .candle { position:absolute; top:-28px; left:50%; transform:translateX(-50%); width:12px; height:30px; background:#ff8c00; border-radius:3px; }
+  .flame { position:absolute; top:-14px; left:50%; transform:translateX(-50%); width:16px; height:16px; border-radius:50%; background: radial-gradient(circle,#ffd700 30%,#ff7a00 60%,rgba(255,120,0,0) 80%); animation:flicker 0.25s infinite alternate; }
+  @keyframes flicker { from{transform:translateX(-50%) scale(1);} to{transform:translateX(-50%) scale(1.25);} }
+
+  .music-btn { position: fixed; right: 18px; bottom: 18px; z-index: 999; background: rgba(255,255,255,0.85); border-radius:50%; width:50px; height:50px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .music-btn svg { width:24px; height:24px; fill:#ff4b76; }
+</style>
+</head>
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div class="balloon b1"></div>
+<div class="balloon b2"></div>
+<div class="balloon b3"></div>
+<div class="balloon b4"></div>
+<div class="balloon b5"></div>
+
+<div class="content">
+  <h1>🎉 Selamat Ulang Tahun, Sayang! 🎂</h1>
+  <p>Semoga hari spesial ini penuh dengan tawa, cinta, dan kebahagiaan.<br>
+     Tetap jadi sosok yang ceria dan menginspirasi ya 💖<br>
+     Ayak selalu di sini untuk support kamu, princes kecil cantik ayak 💕<br>
+     Jangan pernah merasa sendiri ya sayang. Teruslah berusaha sampai semua impianmu jadi nyata! ✨</p>
+  <div class="cake">
+    <div class="icing"></div>
+    <div class="base"></div>
+    <div class="candle"></div>
+    <div class="flame"></div>
+  </div>
+</div>
+
+<!-- Musik otomatis -->
+<audio id="bg-music" play\ loop>
+  <source src="audio/Terbuang Dalam Waktu_musicaldown.com_1760878534.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const music = document.getElementById('bg-music');
+const icon = document.createElement('div');
+icon.classList.add('music-btn');
+icon.innerHTML = '<svg id="musicIcon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zM14 5v14h4V5h-4z"/></svg>';
+document.body.appendChild(icon);
+
+icon.addEventListener('click', () => {
+  if (music.paused) {
+    music.play();
+    icon.innerHTML = '<svg id="musicIcon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zM14 5v14h4V5h-4z"/></svg>';
+  } else {
+    music.pause();
+    icon.innerHTML = '<svg id="musicIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+  }
+});
+
+/* ===== Kembang Api ===== */
+const canvas = document.getElementById('fireworks');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas(){
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+  canvas.style.width = window.innerWidth + 'px';
+  canvas.style.height = window.innerHeight + 'px';
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.scale(dpr,dpr);
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function rand(min,max){ return Math.random()*(max-min)+min; }
+class Particle {
+  constructor(x,y,color){
+    this.x=x; this.y=y;
+    this.vx=Math.cos(rand(0,Math.PI*2))*rand(1,4);
+    this.vy=Math.sin(rand(0,Math.PI*2))*rand(1,4);
+    this.life=rand(50,110);
+    this.ttl=this.life;
+    this.color=color;
+    this.size=rand(1,3);
+  }
+  update(){
+    this.vy+=0.02;
+    this.x+=this.vx; this.y+=this.vy; this.ttl--;
+  }
+  draw(ctx){
+    const alpha=Math.max(this.ttl/this.life,0);
+    ctx.beginPath();
+    ctx.globalCompositeOperation='lighter';
+    ctx.fillStyle=`rgba(${this.color},${alpha})`;
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fill();
+  }
+}
+
+function spawnFirework(x,y){
+  const color=`${Math.floor(rand(120,255))},${Math.floor(rand(80,255))},${Math.floor(rand(80,255))}`;
+  const count=Math.floor(rand(30,60));
+  for(let i=0;i<count;i++) particles.push(new Particle(x,y,color));
+}
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];
+    p.update(); p.draw(ctx);
+    if(p.ttl<=0) particles.splice(i,1);
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+setInterval(()=>spawnFirework(rand(80,window.innerWidth-80), rand(60,window.innerHeight/2)),700);
+document.addEventListener('click', (e)=>spawnFirework(e.clientX,e.clientY));
+</script>
+</body>
+</html>
